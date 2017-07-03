@@ -1,35 +1,35 @@
-function p = predict(Theta1, Theta2, X)
-%PREDICT Predict the label of an input given a trained neural network
-%   p = PREDICT(Theta1, Theta2, X) outputs the predicted label of X given the
-%   trained weights of a neural network (Theta1, Theta2)
+function p = predict(theta, X)
+%PREDICT Predict whether the label is 0 or 1 using learned logistic 
+%regression parameters theta
+%   p = PREDICT(theta, X) computes the predictions for X using a 
+%   threshold at 0.5 (i.e., if sigmoid(theta'*x) >= 0.5, predict 1)
 
-% Useful values
-m = size(X, 1);
-num_labels = size(Theta2, 1);
+m = size(X, 1); % Number of training examples
 
-% You need to return the following variables correctly 
-p = zeros(size(X, 1), 1);
-% Add ones to the X data matrix
-X = [ones(m, 1) X];
+% You need to return the following variables correctly
+p = zeros(m, 1);
+temp_vector = p;
 % ====================== YOUR CODE HERE ======================
 % Instructions: Complete the following code to make predictions using
-%               your learned neural network. You should set p to a 
-%               vector containing labels between 1 to num_labels.
+%               your learned logistic regression parameters. 
+%               You should set p to a vector of 0's and 1's
 %
-% Hint: The max function might come in useful. In particular, the max
-%       function can also return the index of the max element, for more
-%       information see 'help max'. If your examples are in rows, then, you
-%       can use max(A, [], 2) to obtain the max for each row.
-%
-a2 = sigmoid(X * Theta1');
-m = size(a2,1);
-a2 = [ones(m,1) a2];
-a3 = sigmoid(a2 * Theta2');
-[a3_max,i_max] = max(a3,[],2);
-p = i_max;
 
-
-
+no_of_features = size(X,2);
+temp_matrix = zeros(m,no_of_features);
+for iter = 1:no_of_features
+    temp_vector = theta(iter) * X(:,iter);
+    temp_matrix(:,iter) = temp_vector; 
+end
+p = sum(temp_matrix,2);
+positive = find(p>=0);
+negative = find(p<0);
+for i=1:size(positive)
+    p(positive(i)) = 1;
+end
+for i = 1:size(negative)
+    p(negative(i)) = 0;
+end
 % =========================================================================
 
 
